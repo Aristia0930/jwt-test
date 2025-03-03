@@ -23,17 +23,29 @@ public class RestApiController {
         return "<h1>home</h1>";
     }
 
-    @PostMapping("/token")
+    @PostMapping("/api/user/token")
     public String token(){
         return "<h1>token</h1>";
     }
 
-    @PostMapping("join")
+    @PostMapping("/api/admin")
+    public String admin(){
+        return "<h1>admin</h1>";
+    }
+
+
+    @PostMapping("/join")
     public String join(@RequestBody User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoles("ROLE_USER");
         userRepository.save(user);
         return "회원가입완료";
+    }
+
+    @PostMapping("/login")
+    public String lgoin() {
+
+        return "로그인완료";
     }
 
 

@@ -1,5 +1,7 @@
 package org.example.jwt.config.jwt;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-
+import java.util.Date;
 
 
 //스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음
@@ -57,8 +59,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //3.authenticationManager 이걸로 로그인 시도를를 하면  PrincipalDetailsService 이걸 호출 하도록한다.
             Authentication authentication = authenticationManager.authenticate(token);
 
-            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            System.out.println(principalDetails.getUser().getUsername());
+//            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+//            System.out.println(principalDetails.getUser().getUsername());
 
 
 //            System.out.println(request.getInputStream().toString()); // 이게 유저아이디(이름)와 패스워드 가 담겨있다
@@ -88,6 +90,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("인증이 정상적으로 완료됨");
-        super.successfulAuthentication(request, response, chain, authResult);
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+
+        //Hash 방식 이거 말고도 rsa 방식도 존재한다.
+
+        String jwtToken= JWT.create()
+                .withSubject(principalDetails.getUsername())//토큰이름
+                .withExpiresAt(new Date(System.currentTimeMillis()+(60000*10)))//만료 시간 60000 이 1분
+                .withClaim("id",principalDetails.getUser().getId())
+                .withClaim("username",principalDetails.getUser().getUsername())
+                .sign(Algorithm.HMAC512("code"));//내 고유의값.
+
+        response.addHeader("Authorization","Bearer "+jwtToken);
+        //이렇게 사용자에게 jwt 토큰을 보냈으면 이제 이 토큰이 유효한지 확인하는 필터가 필요함
     }
 }
