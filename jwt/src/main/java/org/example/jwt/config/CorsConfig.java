@@ -1,8 +1,11 @@
 package org.example.jwt.config;
 
 
+import org.example.jwt.config.auth.CustomAuthenticationProvider;
+import org.example.jwt.config.auth.PrincipalDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -21,4 +24,6 @@ public class CorsConfig {
         source.registerCorsConfiguration("/api/**",config);
         return new CorsFilter(source);
     }
+
+
 }

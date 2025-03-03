@@ -10,7 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@Component
+//@Component
 public class MyFilter extends OncePerRequestFilter {
     //접속시 addFilterBefore 또는 addFilterAfter 에 걸어서 사용한다.
     @Override
