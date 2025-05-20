@@ -1,7 +1,7 @@
 package org.example.jwt.config;
 
 
-import org.example.jwt.config.auth.CustomAuthenticationProvider;
+
 import org.example.jwt.config.auth.PrincipalDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
